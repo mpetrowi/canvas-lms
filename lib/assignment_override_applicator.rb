@@ -351,7 +351,7 @@ module AssignmentOverrideApplicator
   # turn the list of overrides into a unique but consistent cache key component
   def self.overrides_hash(overrides)
     canonical = overrides.map{ |override| override.cache_key }.inspect
-    Digest::MD5.hexdigest(canonical)
+    Digest::SHA384.hexdigest(canonical)
   end
 
   # perform overrides of specific fields
@@ -406,7 +406,7 @@ module AssignmentOverrideApplicator
 
   def self.should_preload_override_students?(assignments, user, endpoint_key)
     return false unless user
-    assignment_key = Digest::MD5.hexdigest(assignments.map(&:id).sort.map(&:to_s).join(','))
+    assignment_key = Digest::SHA384.hexdigest(assignments.map(&:id).sort.map(&:to_s).join(','))
     key = ['should_preload_assignment_override_students', user.cache_key(:enrollments), user.cache_key(:groups), endpoint_key, assignment_key].cache_key
     # if the user has been touch we should preload all of the overrides because it's almost certain we'll need them all
     if Rails.cache.read(key)

@@ -3259,7 +3259,7 @@ describe User do
 
     it "generates tokens made of id/md5(uuid) pairs" do
       tokens.each_with_index do |token, i|
-        expect(token).to eq "#{users[i].id}_#{Digest::MD5.hexdigest(users[i].uuid)}"
+        expect(token).to eq "#{users[i].id}_#{Digest::SHA384.hexdigest(users[i].uuid)}"
       end
     end
 

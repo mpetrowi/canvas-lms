@@ -215,7 +215,7 @@ class ApplicationController < ActionController::Base
     :direct_share, :assignment_bulk_edit, :responsive_awareness,
     :responsive_misc, :product_tours, :module_dnd, :files_dnd, :unpublished_courses, :bulk_delete_pages
   ].freeze
-  JS_ENV_FEATURES_HASH = Digest::MD5.hexdigest([JS_ENV_SITE_ADMIN_FEATURES + JS_ENV_ROOT_ACCOUNT_FEATURES].sort.join(",")).freeze
+  JS_ENV_FEATURES_HASH = Digest::SHA384.hexdigest([JS_ENV_SITE_ADMIN_FEATURES + JS_ENV_ROOT_ACCOUNT_FEATURES].sort.join(",")).freeze
   def cached_js_env_account_features
     # can be invalidated by a flag change on either site admin or the domain root account
     Rails.cache.fetch(["js_env_account_features", JS_ENV_FEATURES_HASH,
@@ -2028,7 +2028,7 @@ class ApplicationController < ActionController::Base
 
   def temporary_user_code(generate=true)
     if generate
-      session[:temporary_user_code] ||= "tmp_#{Digest::MD5.hexdigest("#{Time.now.to_i}_#{rand}")}"
+      session[:temporary_user_code] ||= "tmp_#{Digest::SHA384.hexdigest("#{Time.now.to_i}_#{rand}")}"
     else
       session[:temporary_user_code]
     end

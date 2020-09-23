@@ -202,7 +202,7 @@ class CanvasUnzip
         raise DestinationFileExists, "Destination '#{dest_path}' already exists"
       end
 
-      digest = Digest::MD5.new
+      digest = Digest::SHA384.new
       ::File.open(dest_path, "wb") do |os|
         if type == :zip
           entry.get_input_stream do |is|

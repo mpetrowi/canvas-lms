@@ -102,6 +102,7 @@ module CanvasRails
     config.active_record.allow_unsafe_raw_sql = :disabled
 
     config.active_support.encode_big_decimal_as_string = false
+    config.active_support.use_sha1_digests = true
 
     config.paths['lib'].eager_load!
     config.paths.add('app/middleware', eager_load: true, autoload_once: true)

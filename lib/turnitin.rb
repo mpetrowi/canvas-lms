@@ -281,7 +281,7 @@ module Turnitin
         str += (params[key] || "")
       end
       str += @shared_secret
-      Digest::MD5.hexdigest(str)
+      Digest::SHA384.hexdigest(str)
     end
 
     def escape_params(params)

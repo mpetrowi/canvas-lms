@@ -154,7 +154,7 @@ module BrandableCSS
     end
 
     def default_variables_md5_without_migration_check
-      Digest::MD5.hexdigest(things_that_go_into_defaults_md5.to_json).freeze
+      Digest::SHA384.hexdigest(things_that_go_into_defaults_md5.to_json).freeze
     end
 
     def handle_urls(value, config, css_urls)

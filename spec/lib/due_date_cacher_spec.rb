@@ -249,7 +249,7 @@ describe DueDateCacher do
       expect(instance).to receive(:send_later_if_production_enqueue_args).
         with(
           :recompute,
-          singleton: "cached_due_date:calculator:Users:#{@course.global_id}:#{Digest::MD5.hexdigest(student_1.id.to_s)}",
+          singleton: "cached_due_date:calculator:Users:#{@course.global_id}:#{Digest::SHA384.hexdigest(student_1.id.to_s)}",
           max_attempts: 10
         )
       DueDateCacher.recompute_users_for_course(student_1.id, @course)

@@ -362,7 +362,7 @@ module AttachmentFu # :nodoc:
         end
         unless attachment_options[:skip_sis]
           read_bytes = false
-          digest = Digest::MD5.new
+          digest = Digest::SHA384.new
           begin
             io = file_data
             if file_from_path

@@ -414,7 +414,7 @@ class WebConference < ActiveRecord::Base
   end
 
   def presenter_key
-    @presenter_key ||= "instructure_" + Digest::MD5.hexdigest([user_id, self.uuid].join(","))
+    @presenter_key ||= "instructure_" + Digest::SHA384.hexdigest([user_id, self.uuid].join(","))
   end
 
   def attendee_key

@@ -60,7 +60,7 @@ module CC::Importer::Standard
           end
           sub_file = {}
           sub_file[:path_name] = file_ref[:href]
-          sub_file[:migration_id] = Digest::MD5.hexdigest(sub_file[:path_name])
+          sub_file[:migration_id] = Digest::SHA384.hexdigest(sub_file[:path_name])
           sub_file[:file_name] = File.basename sub_file[:path_name]
           sub_file[:type] = 'FILE_TYPE'
           add_course_file(sub_file)

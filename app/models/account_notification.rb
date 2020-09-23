@@ -173,7 +173,7 @@ class AccountNotification < ActiveRecord::Base
 
   def self.for_account(root_account, all_visible_account_ids=nil, include_past: false)
     # Refreshes every 10 minutes at the longest
-    all_account_ids_hash = Digest::MD5.hexdigest all_visible_account_ids.try(:sort).to_s
+    all_account_ids_hash = Digest::SHA384.hexdigest all_visible_account_ids.try(:sort).to_s
     Rails.cache.fetch(['account_notifications4', root_account, all_account_ids_hash].cache_key, expires_in: 10.minutes) do
       now = Time.now.utc
       end_at = now - 4.months if include_past

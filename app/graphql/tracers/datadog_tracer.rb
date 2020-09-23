@@ -32,7 +32,7 @@ module Tracers
           domain: @domain
         }
 
-        tags[:query_md5] = Digest::MD5.hexdigest(metadata[:query].query_string).to_s unless @third_party
+        tags[:query_md5] = Digest::SHA384.hexdigest(metadata[:query].query_string).to_s unless @third_party
         InstStatsd::Statsd.increment("graphql.#{query_name}.count", tags: tags)
         InstStatsd::Statsd.time("graphql.#{query_name}.time", tags: tags) do
           yield

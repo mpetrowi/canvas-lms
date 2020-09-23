@@ -138,7 +138,7 @@ class Quizzes::QuizQuestion::Base
     responses.each do |response|
       found = nil
       if response[:text].try(:strip).present?
-        answer_md5 = Digest::MD5.hexdigest(response[:text].strip)
+        answer_md5 = Digest::SHA384.hexdigest(response[:text].strip)
       end
 
       answers.each do |answer|

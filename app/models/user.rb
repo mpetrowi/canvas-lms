@@ -1355,7 +1355,7 @@ class User < ActiveRecord::Base
 
   def gravatar_url(size=50, fallback=nil, request=nil)
     fallback = self.class.avatar_fallback_url(fallback, request)
-    "https://secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(self.email) rescue '000'}?s=#{size}&d=#{CGI::escape(fallback)}"
+    "https://secure.gravatar.com/avatar/#{Digest::SHA384.hexdigest(self.email) rescue '000'}?s=#{size}&d=#{CGI::escape(fallback)}"
   end
 
   # Public: Set a user's avatar image. This is a convenience method that sets
@@ -1592,7 +1592,7 @@ class User < ActiveRecord::Base
 
   def course_nickname_hash
     if preferences[:course_nicknames].present?
-      @nickname_hash ||= Digest::MD5.hexdigest(user_preference_values.where(:key => :course_nicknames).pluck(:sub_key, :value).sort.join(","))
+      @nickname_hash ||= Digest::SHA384.hexdigest(user_preference_values.where(:key => :course_nicknames).pluck(:sub_key, :value).sort.join(","))
     else
       "default"
     end
@@ -2022,7 +2022,7 @@ class User < ActiveRecord::Base
     return [] unless course_ids.present?
 
     shard.activate do
-      ids_hash = Digest::MD5.hexdigest(course_ids.sort.join(","))
+      ids_hash = Digest::SHA384.hexdigest(course_ids.sort.join(","))
       Rails.cache.fetch_with_batched_keys(['submissions_for_course_ids', ids_hash, start_at, limit].cache_key, expires_in: 1.day, batch_object: self, batched_keys: :submissions) do
         start_at ||= 4.weeks.ago
 
@@ -3024,7 +3024,7 @@ class User < ActiveRecord::Base
 
   # user tokens are returned by UserListV2 and used to bulk-enroll users using information that isn't easy to guess
   def self.token(id, uuid)
-    "#{id}_#{Digest::MD5.hexdigest(uuid)}"
+    "#{id}_#{Digest::SHA384.hexdigest(uuid)}"
   end
 
   def token

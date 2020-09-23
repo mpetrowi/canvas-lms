@@ -37,7 +37,7 @@ module ContextModulesHelper
     if context_module
       visible_assignments = user ? user.assignment_and_quiz_visibilities(context) : []
       cache_key_items = ['context_module_render_20_', context_module.cache_key, editable, is_student, can_view_unpublished,
-        true, Time.zone, Digest::MD5.hexdigest([visible_assignments, @section_visibility].join("/"))]
+        true, Time.zone, Digest::SHA384.hexdigest([visible_assignments, @section_visibility].join("/"))]
       cache_key = cache_key_items.join('/')
       cache_key = add_menu_tools_to_cache_key(cache_key)
       cache_key = add_mastery_paths_to_cache_key(cache_key, context, user)
@@ -50,7 +50,7 @@ module ContextModulesHelper
   def add_menu_tools_to_cache_key(cache_key)
     tool_key = @menu_tools ? @menu_tools.values.flatten.map(&:cache_key).join("/") : ""
     tool_key += @module_group_tools.to_s if @module_group_tools.present?
-    cache_key += Digest::MD5.hexdigest(tool_key) if tool_key.present?
+    cache_key += Digest::SHA384.hexdigest(tool_key) if tool_key.present?
     # should leave it alone if there are no tools
     cache_key
   end
@@ -62,7 +62,7 @@ module ContextModulesHelper
       else
         rules = ConditionalRelease::Service.active_rules(context, user, @session)
       end
-      cache_key += '/mastery:' + Digest::MD5.hexdigest(rules.to_s)
+      cache_key += '/mastery:' + Digest::SHA384.hexdigest(rules.to_s)
     end
     cache_key
   end

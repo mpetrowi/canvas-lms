@@ -1129,7 +1129,7 @@ class Course < ActiveRecord::Base
   end
 
   def long_self_enrollment_code
-    @long_self_enrollment_code ||= Digest::MD5.hexdigest("#{uuid}_for_#{id}")
+    @long_self_enrollment_code ||= Digest::SHA384.hexdigest("#{uuid}_for_#{id}")
   end
 
   # still include the old longer format, since links may be out there

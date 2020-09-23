@@ -1449,8 +1449,8 @@ class Attachment < ActiveRecord::Base
     # i imagine that inevitably someone is going to change the file without knowing about any of this
     # so make the cache depend on the file contents
     path = self.file_removed_path
-    @@file_removed_md5 ||= Digest::MD5.hexdigest(File.read(path))
-    key = "file_removed_instfs_uuid_#{@@file_removed_md5}_#{Digest::MD5.hexdigest(InstFS.app_host)}"
+    @@file_removed_md5 ||= Digest::SHA384.hexdigest(File.read(path))
+    key = "file_removed_instfs_uuid_#{@@file_removed_md5}_#{Digest::SHA384.hexdigest(InstFS.app_host)}"
 
     @@base_file_removed_uuids ||= {}
     @@base_file_removed_uuids[key] ||= Rails.cache.fetch(key) do
