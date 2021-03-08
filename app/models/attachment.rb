@@ -142,7 +142,8 @@ class Attachment < ActiveRecord::Base
       :path_prefix => file_store_config['path_prefix'],
       :s3_access => 'private',
       :thumbnails => { :thumb => '128x128' },
-      :thumbnail_class => 'Thumbnail'
+      :thumbnail_class => 'Thumbnail',
+      :use_sha512_digests => file_store_config['use_sha512_digests'],
   )
 
   # These callbacks happen after the attachment data is saved to disk/s3, or
@@ -1542,7 +1543,7 @@ class Attachment < ActiveRecord::Base
     # so make the cache depend on the file contents
     path = self.file_removed_path
     @@file_removed_md5 ||= Digest::MD5.hexdigest(File.read(path))
-    key = "file_removed_instfs_uuid_#{@@file_removed_md5}_#{Digest::MD5.hexdigest(InstFS.app_host)}"
+    key = "file_removed_instfs_uuid_#{@@file_removed_md5}_#{Digest::SHA256.hexdigest(InstFS.app_host)}"
 
     @@base_file_removed_uuids ||= {}
     @@base_file_removed_uuids[key] ||= Rails.cache.fetch(key) do
