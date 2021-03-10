@@ -25,7 +25,7 @@ class BrandConfig < ActiveRecord::Base
   ATTRS_TO_INCLUDE_IN_MD5 = ([:variables, :parent_md5] + OVERRIDE_TYPES).freeze
 
   validates :variables, presence: true, unless: :overrides?
-  validates :md5, length: {is: 32}
+  validates :md5, length: {in: 32..255}
 
   before_validation :generate_md5
   before_update do
@@ -67,7 +67,7 @@ class BrandConfig < ActiveRecord::Base
   end
 
   def self.md5_for(brand_config)
-    Digest::MD5.hexdigest(ATTRS_TO_INCLUDE_IN_MD5.map { |a| brand_config[a] }.join)
+    Digest::SHA256.hexdigest(ATTRS_TO_INCLUDE_IN_MD5.map { |a| brand_config[a] }.join)
   end
 
   def get_value(variable_name)
