@@ -19,6 +19,7 @@ class CreateMinimalistTheme < ActiveRecord::Migration[4.2]
   tag :predeploy
 
   NAME = "Minimalist Theme"
+  MD5 = "3f38c01c65835e7de842d709a89ec3e8"
 
   def up
     variables = {
@@ -44,7 +45,11 @@ class CreateMinimalistTheme < ActiveRecord::Migration[4.2]
     bc = BrandConfig.new(variables: variables)
     bc.name = NAME
     bc.share = true
+    bc.md5 = MD5
+    # set the md5 directly in the record for backwards compatability
+    BrandConfig.skip_callback :validation, :before, :generate_md5
     bc.save!
+    BrandConfig.set_callback :validation, :before, :generate_md5
     SharedBrandConfig.create!(name: bc.name, brand_config_md5: bc.md5)
   end
 

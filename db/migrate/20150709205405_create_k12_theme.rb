@@ -19,6 +19,7 @@ class CreateK12Theme < ActiveRecord::Migration[4.2]
   tag :predeploy
 
   NAME = "K12 Theme"
+  MD5_OF_K12_CONFIG = 'a1f113321fa024e7a14cb0948597a2a4'
 
   def up
     variables = {
@@ -31,7 +32,11 @@ class CreateK12Theme < ActiveRecord::Migration[4.2]
     bc = BrandConfig.new(variables: variables)
     bc.name = NAME
     bc.share = true
+    bc.md5 = MD5_OF_K12_CONFIG
+    # set the md5 directly in the record for backwards compatability
+    BrandConfig.skip_callback :validation, :before, :generate_md5
     bc.save!
+    BrandConfig.set_callback :validation, :before, :generate_md5
     SharedBrandConfig.create!(name: bc.name, brand_config_md5: bc.md5)
   end
 
