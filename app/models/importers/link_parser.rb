@@ -57,7 +57,7 @@ module Importers
     end
 
     def placeholder(old_value)
-      "#{LINK_PLACEHOLDER}_#{Digest::MD5.hexdigest(old_value)}"
+      "#{LINK_PLACEHOLDER}_#{Digest::SHA256.hexdigest(old_value)}"
     end
 
     def convert_link(node, attr, item_type, mig_id, field)
@@ -165,7 +165,7 @@ module Importers
     def link_embedded_image(info_match)
       extension = MIME::Types[info_match[:mime_type]]&.first&.extensions&.first
       image_data = Base64.decode64(info_match[:image])
-      md5 = Digest::MD5.hexdigest image_data
+      md5 = Attachment.digest_classes.first.hexdigest image_data
       folder_name = I18n.t('embedded_images')
       @folder ||= Folder.root_folders(context).first.sub_folders.
         where(name: folder_name, workflow_state: 'hidden', context: context).first_or_create!
