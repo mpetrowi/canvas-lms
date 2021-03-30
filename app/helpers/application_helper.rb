@@ -464,7 +464,7 @@ module ApplicationHelper
   def safe_cache_key(*args)
     key = args.cache_key
     if key.length > 200
-      key = Digest::MD5.hexdigest(key)
+      key = Digest::SHA256.hexdigest(key)
     end
     key
   end
@@ -857,7 +857,7 @@ module ApplicationHelper
   # if you can avoid loading the list at all, that's even better, of course.
   def collection_cache_key(collection)
     keys = collection.map { |element| element.cache_key }
-    Digest::MD5.hexdigest(keys.join('/'))
+    Digest::SHA256.hexdigest(keys.join('/'))
   end
 
   def translated_due_date(assignment)
